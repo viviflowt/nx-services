@@ -6,6 +6,7 @@ const commands = [
   // 'node scripts/code.js --unused',
   "npx imports-sanitize -p './apps'",
   "npx imports-sanitize -p './libs'",
+  'yarn format',
 ];
 
 for (const command of commands) {

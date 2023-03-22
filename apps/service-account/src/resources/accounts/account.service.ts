@@ -3,13 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PaginatedQueryOptions, PaginatedResult } from '@org/repository';
+import { FindOneOptions, Not } from 'typeorm';
+import { Account, AccountStatus } from '../../entities';
+import { AccountRepository } from '../../repositories/account.repository';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
-import { PaginatedQueryOptions, PaginatedResult } from '@org/repository';
-import { Account, AccountStatus } from '../../database';
-import { AccountRepository } from '../../repositories/account.repository';
-import { EntityManager, FindOneOptions, Not } from 'typeorm';
-import { Nullable } from '@org/common';
 
 @Injectable()
 export class AccountService {

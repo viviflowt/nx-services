@@ -47,7 +47,7 @@ for (const file of files) {
         fs.writeFileSync(
           path.join(outDir, f.kebabCase(name).concat('.ts')),
           node.getFullText(),
-          'utf8',
+          'utf8'
         );
         // fs.writeFileSync(
         //   path.join(outDir, f.kebabCase(name).concat('.spec.ts')),
@@ -70,7 +70,7 @@ for (const file of files) {
 
           fs.writeFileSync(
             path.join(outDir, f.kebabCase(name).concat('.ts')),
-            node.getFullText(),
+            node.getFullText()
           );
         }
 
@@ -78,7 +78,7 @@ for (const file of files) {
           console.log(f.kebabCase(name).concat('.enum.ts'));
           fs.writeFileSync(
             path.join(outDir, f.kebabCase(name).concat('.enum.ts')),
-            node.getFullText(),
+            node.getFullText()
           );
         }
 
@@ -87,7 +87,7 @@ for (const file of files) {
 
           fs.writeFileSync(
             path.join(outDir, f.kebabCase(name).concat('.interface.ts')),
-            node.getFullText(),
+            node.getFullText()
           );
         }
       }

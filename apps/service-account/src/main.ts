@@ -4,10 +4,10 @@
  */
 
 import {
-  ClassSerializerInterceptor,
-  HttpStatus,
-  Logger,
-  ValidationPipe,
+    ClassSerializerInterceptor,
+    HttpStatus,
+    Logger,
+    ValidationPipe
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';

@@ -1,12 +1,12 @@
-import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
-import { IsEqualTo } from '@org/common';
 import { faker } from '@faker-js/faker';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEqualTo } from '@org/common';
 
 import {
-  IsNotEmpty,
-  IsString,
-  IsOptional,
   IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
   MinLength,
 } from 'class-validator';
 

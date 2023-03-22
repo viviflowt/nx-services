@@ -21,11 +21,15 @@ export const PostgresConfig: DataSourceOptions = {
   // entitySkipConstructor: true,
   synchronize: true,
   dropSchema: false,
-  migrationsTableName: 'typeorm_migrations',
   namingStrategy: new SnakeNamingStrategy(),
   migrations: [path.join(__dirname, '../database/migrations/*{.ts,.js}')],
   subscribers: [path.join(__dirname, '../database/subscribers/*{.ts,.js}')],
+  migrationsTableName: 'typeorm_migrations',
+  metadataTableName: 'typeorm_metadata',
+  uuidExtension: 'uuid-ossp',
+  installExtensions: true,
   maxQueryExecutionTime: ms('1m'),
+  connectTimeoutMS: ms('30s'),
 };
 
 interface DatabaseConfiguration {

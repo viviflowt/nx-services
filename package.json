@@ -7,13 +7,13 @@
     "build": "nx run-many --target=build --all --skip-nx-cache",
     "clean": "shx rm -rf dist",
     "dev": "nx serve",
-    "serve": "nx serve",
     "ext": "node scripts/extract.js",
     "fix": "node scripts/fix.js",
-    "format": "nx format:write",
+    "format": "nx format:write --all --skip-nx-cache",
     "lint": "nx run-many --target=lint --all --fix",
     "logs": "nx view-logs",
     "nx": "nx",
+    "serve": "nx serve",
     "typeorm": "npx env-cmd -f .env yarn typeorm-ts-node-commonjs -d apps/service-account/src/config/datasource.ts"
   },
   "dependencies": {

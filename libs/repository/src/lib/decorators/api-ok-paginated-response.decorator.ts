@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { applyDecorators, Type } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
-
 import { PaginatedResult } from '../dto';
-
 export const ApiOkPaginatedResponse = <T extends Type<any>>(options: {
   type: T;
   description?: string;

@@ -1,19 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseUUIDPipe,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkPaginatedResponse, PaginatedQueryOptions } from '@org/repository';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ApiOkPaginatedResponse, PaginatedQueryOptions } from '@org/repository';
 
 import { Account } from '../../entities/account.entity';
 
