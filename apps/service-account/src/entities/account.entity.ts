@@ -2,14 +2,14 @@ import bcrypt from 'bcryptjs';
 import { Exclude } from 'class-transformer';
 import f from 'lodash/fp';
 import {
-    BaseEntity,
-    Check,
-    Column,
-    CreateDateColumn,
-    DeleteDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
+  BaseEntity,
+  Check,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 export enum AccountStatus {

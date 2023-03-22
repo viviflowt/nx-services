@@ -4,10 +4,10 @@
  */
 
 import {
-    ClassSerializerInterceptor,
-    HttpStatus,
-    Logger,
-    ValidationPipe
+  ClassSerializerInterceptor,
+  HttpStatus,
+  Logger,
+  ValidationPipe,
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -23,15 +23,6 @@ async function bootstrap() {
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-
-  app.use(cookieParser());
-  app.use(
-    session({
-      secret: 'secret',
-      resave: false,
-      saveUninitialized: false,
-    })
-  );
 
   app.useGlobalPipes(
     new ValidationPipe({

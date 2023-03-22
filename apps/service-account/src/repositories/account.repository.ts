@@ -3,7 +3,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { Nullable } from '@org/common';
 import { BaseRepository } from '@org/repository';
 import { DataSource } from 'typeorm';
-import { Account } from "../entities";
+import { Account } from '../entities/account.entity';
 
 @Injectable()
 export class AccountRepository extends BaseRepository<Account> {
