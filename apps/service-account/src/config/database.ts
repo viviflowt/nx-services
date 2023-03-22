@@ -24,6 +24,7 @@ export const PostgresConfig: DataSourceOptions = {
   migrationsTableName: 'typeorm_migrations',
   namingStrategy: new SnakeNamingStrategy(),
   migrations: [path.join(__dirname, '../database/migrations/*{.ts,.js}')],
+  subscribers: [path.join(__dirname, '../database/subscribers/*{.ts,.js}')],
   maxQueryExecutionTime: ms('1m'),
 };
 

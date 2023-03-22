@@ -13,7 +13,8 @@ services:
     build:
       context: .
       dockerfile: ./apps/service-account/Dockerfile
-      target: development
+      # target: development
+      target: production
     environment:
       PORT: 4000
       PRIMARY_DB_HOST: postgres

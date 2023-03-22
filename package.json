@@ -7,6 +7,7 @@
     "build": "nx run-many --target=build --all --skip-nx-cache",
     "clean": "shx rm -rf dist",
     "dev": "nx serve",
+    "serve": "nx serve",
     "ext": "node scripts/extract.js",
     "fix": "node scripts/fix.js",
     "format": "nx format:write",

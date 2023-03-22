@@ -10,7 +10,7 @@ COPY . .
 
 RUN yarn nx build service-account
 
-CMD ["yarn", "serve", "service-account"]
+CMD ["yarn", "nx", "serve", "service-account"]
 
 
 FROM node:18 as production
@@ -25,5 +25,5 @@ COPY . .
 
 RUN yarn nx build service-account --configuration=production
 
-CMD ["yarn", "serve", "service-account", "--configuration=production"]
+CMD ["yarn", "nx", "serve", "service-account", "--configuration=production"]
 

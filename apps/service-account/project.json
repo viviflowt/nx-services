@@ -17,11 +17,17 @@
         "main": "apps/service-account/src/main.ts",
         "tsConfig": "apps/service-account/tsconfig.app.json",
         "isolatedConfig": true,
-        "webpackConfig": "apps/service-account/webpack.config.js"
+        "webpackConfig": "apps/service-account/webpack.config.js",
+        "buildLibsFromSource": true
       },
       "configurations": {
-        "development": {},
-        "production": {}
+        "development": {
+          "sourceMap": true
+        },
+        "production": {
+          "generatePackageJson": true,
+          "optimization": true
+        }
       }
     },
     "serve": {
