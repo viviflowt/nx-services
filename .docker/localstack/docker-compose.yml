@@ -1,0 +1,31 @@
+version: '3'
+
+volumes:
+  localstack-volume:
+
+
+services:
+  localstack:
+    image: localstack/localstack
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      # SERVICES: sqs,sns,s3,lambda,
+      AWS_DEFAULT_REGION: us-east-1
+      ALLOW_EMPTY_PASSWORD: 'yes'
+      AWS_ACCESS_KEY_ID: SERVICE_STACK
+      AWS_SECRET_ACCESS_KEY: SERVICE_STACK
+      EDGE_PORT: 4566
+      DEBUG: 1
+      LAMBDA_REMOTE_DOCKER: 0
+    ports:
+      - '4566-4597:4566-4597' # Default port forward
+      - '9200:4571' # Elasticsearch port forward
+      - '8080:8080' # WebUI port forward
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - localstack-volume:/tmp/localstack

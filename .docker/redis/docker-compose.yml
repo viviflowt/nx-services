@@ -1,0 +1,49 @@
+version: '3'
+
+volumes:
+  redis-primary-volume:
+  redis-replica-volume:
+
+
+services:
+  redis-primary:
+    image: bitnami/redis
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      REDIS_USER: redis
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
+      REDIS_REPLICATION_MODE: master
+      REDIS_PASSWORD: ''
+      DEBUG: 1
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-primary-volume:/bitnami/redis/data
+
+  redis-replica:
+    image: bitnami/redis
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      REDIS_USER: redis
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
+      REDIS_REPLICATION_MODE: slave
+      REDIS_MASTER_HOST: redis-primary
+      REDIS_MASTER_PORT_NUMBER: 6379
+      REDIS_MASTER_PASSWORD: ''
+      DEBUG: 1
+    ports:
+      - '6380-6381:6379'
+    volumes:
+      - redis-replica-volume:/bitnami/redis/data

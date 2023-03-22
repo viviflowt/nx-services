@@ -20,3 +20,6 @@
 # yarn add @nestjs/jwt @nestjs/websockets @nestjs/platform-express
 # yarn add @nestjs/passport passport passport-jwt @nestjs/schedule
 # yarn add compression cookie-parser helmet morgan date-fns
+
+yarn add eventemitter2 express js-yaml sqlite3 sqs-consumer ioredis
+yarn add -D depcheck jest-extended typeorm-model-generator
