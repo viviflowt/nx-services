@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
-import { PaginatedQueryOptions, PaginatedResult } from '@org/base-repository';
+import { PaginatedQueryOptions, PaginatedResult } from '@org/repository';
 import { Account, AccountStatus } from '../../database';
 import { AccountRepository } from '../../repositories/account.repository';
 import { EntityManager, FindOneOptions, Not } from 'typeorm';

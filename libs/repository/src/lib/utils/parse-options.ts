@@ -1,12 +1,12 @@
 import { BadRequestException } from '@nestjs/common';
-import { PaginationOptions } from "../interfaces";
+import { PaginationOptions } from '../interfaces';
 import { getCache } from './get-cache';
 import { getLimit } from './get-limit';
 import { getOrder } from './get-order';
 import { getPage } from './get-page';
 
 export const parseOptions = <Entity>(
-  options: Partial<PaginationOptions<Entity>> = {},
+  options: Partial<PaginationOptions<Entity>> = {}
 ) => {
   try {
     return {

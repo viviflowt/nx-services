@@ -1,7 +1,7 @@
 import f from 'lodash/fp';
-import { PaginationOptions } from "../interfaces";
+import { PaginationOptions } from '../interfaces';
 export const getOrder = <Entity>(
-  options: Partial<PaginationOptions<Entity>> = {},
+  options: Partial<PaginationOptions<Entity>> = {}
 ) => {
   return f.memoize(
     f.pipe(
@@ -15,12 +15,12 @@ export const getOrder = <Entity>(
           ? [item.replace(/^-/, ''), 'DESC']
           : f.startsWith('+')
           ? [item.replace(/^\+/, ''), 'ASC']
-          : [item, 'ASC'],
+          : [item, 'ASC']
       ),
       f.map(
-        ([field, direction]) => [field, direction] as [string, 'ASC' | 'DESC'],
+        ([field, direction]) => [field, direction] as [string, 'ASC' | 'DESC']
       ),
-      f.fromPairs,
-    ),
+      f.fromPairs
+    )
   )(options) as Record<string, 'ASC' | 'DESC'>;
 };

@@ -13,10 +13,7 @@ import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import {
-  ApiOkPaginatedResponse,
-  PaginatedQueryOptions,
-} from '@org/base-repository';
+import { ApiOkPaginatedResponse, PaginatedQueryOptions } from '@org/repository';
 
 import { Account } from '../../entities/account.entity';
 

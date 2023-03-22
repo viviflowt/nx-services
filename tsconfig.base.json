@@ -17,8 +17,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@org/base-repository": ["libs/base-repository/src/index.ts"],
-      "@org/common": ["libs/common/src/index.ts"]
+      "@org/common": ["libs/common/src/index.ts"],
+      "@org/repository": ["libs/repository/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
