@@ -2,7 +2,6 @@ const { NodeSSH } = require('node-ssh');
 const fs = require('fs-extra');
 const path = require('path');
 const fg = require('fast-glob');
-const os = require('os');
 const { execSync } = require('child_process');
 const dotenv = require('dotenv');
 const { green } = require('colorette');
