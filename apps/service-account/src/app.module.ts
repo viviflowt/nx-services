@@ -7,10 +7,10 @@ import { DatabaseModule } from './database/database.module';
 import { AccountModule } from './resources/accounts/account.module';
 
 import compression from 'compression';
-import helmet from 'helmet';
-import responseTime from 'response-time';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import helmet from 'helmet';
+import responseTime from 'response-time';
 
 @Global()
 @Module({
@@ -42,9 +42,9 @@ export class AppModule implements NestModule {
       .apply(
         helmet(),
         compression(),
-        cookieParser(this.configService.get('COOKIE_SECRET', 'secret')),
+        cookieParser(this.configService.get('SECRET', 'secret')),
         session({
-          secret: this.configService.get('COOKIE_SECRET', 'secret'),
+          secret: this.configService.get('SECRET', 'secret'),
           resave: false,
           saveUninitialized: false,
         }),

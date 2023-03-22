@@ -11,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
 import morgan from 'morgan';
 import { AppModule } from './app.module';
 
