@@ -7,7 +7,8 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import morgan from 'morgan';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -18,6 +19,14 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
+  app.use(cookieParser());
+  app.use(
+    session({
+      secret: 'secret',
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
   app.use(morgan('dev'));
 
   const document = SwaggerModule.createDocument(

@@ -1,2 +1,1 @@
-export * from './gs-admin';
-export * from './primary';
+export * from './account.entity';
