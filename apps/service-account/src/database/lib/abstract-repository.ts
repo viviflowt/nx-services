@@ -1,15 +1,15 @@
 import {
-  DataSource,
-  EntityManager,
-  EntityTarget,
-  FindManyOptions,
-  Repository,
-  SelectQueryBuilder,
+    DataSource,
+    EntityManager,
+    EntityTarget,
+    FindManyOptions,
+    Repository,
+    SelectQueryBuilder
 } from 'typeorm';
 import { IsolationLevel } from 'typeorm/driver/types/IsolationLevel';
-import { PaginatedResponse } from './dtos';
-import { PaginationOptions } from './interfaces';
-import { paginateQueryBuilder, paginateRepository } from './paginate';
+import { PaginatedResponse } from "./dtos";
+import { PaginationOptions } from "./interfaces";
+import { paginateQueryBuilder, paginateRepository } from "./paginate";
 
 export abstract class AbstractRepository<Entity> extends Repository<Entity> {
   constructor(

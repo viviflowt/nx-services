@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import f from 'lodash/fp';
-import { PaginationOptions } from '../interfaces';
+import { PaginationOptions } from "../interfaces";
 export const getPage = <Entity>(
   options: Partial<PaginationOptions<Entity>> = {},
 ) => {

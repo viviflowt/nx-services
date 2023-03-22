@@ -1,5 +1,5 @@
 import f from 'lodash/fp';
-import { PaginationOptions } from '../interfaces';
+import { PaginationOptions } from "../interfaces";
 export const getLimit = <Entity>(options: PaginationOptions<Entity> = {}) => {
   const limit = f.pipe(
     f.get('limit'),

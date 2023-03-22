@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import configuration from './config/configuration';
-import { DatabaseModule } from './database';
+import { DatabaseModule } from "./database";
 
 @Global()
 @Module({

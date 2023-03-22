@@ -1,7 +1,7 @@
 import f from 'lodash/fp';
 import { SelectQueryBuilder } from 'typeorm';
-import { PaginatedResponse } from '../dtos';
-import { PaginationOptions } from '../interfaces';
+import { PaginatedResponse } from "../dtos";
+import { PaginationOptions } from "../interfaces";
 import { parseOptions } from './parse-options';
 
 const debug = require('debug')('pagination');

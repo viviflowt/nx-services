@@ -12,10 +12,11 @@ const project = new Project({
   skipAddingFilesFromTsConfig: true,
 });
 
-const files = fg.sync(['src/**/*.ts'], {
+const files = fg.sync(['apps/**/*.ts', 'libs/**/*.ts'], {
   onlyFiles: true,
   absolute: true,
   suppressErrors: true,
+  ignore: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/jest*'],
 });
 
 files.forEach((file) => project.addSourceFileAtPath(file));
@@ -48,8 +49,8 @@ project.getSourceFiles().forEach((sourceFile) => {
           !fs.existsSync(
             path.join(
               path.dirname(sourceFile.getFilePath()),
-              moduleSpecifier + '.ts',
-            ),
+              moduleSpecifier + '.ts'
+            )
           )
         ) {
           console.log('invalid:', moduleSpecifier);
@@ -85,7 +86,7 @@ project.getSourceFiles().forEach((sourceFile) => {
         '**/dist/**',
         '**/build/**',
       ],
-    },
+    }
   );
 
   const nonRelativeImportDeclarations = sourceFile
@@ -98,7 +99,7 @@ project.getSourceFiles().forEach((sourceFile) => {
 
       const moduleSpecifierRelativePath = path.relative(
         path.dirname(sourceFile.getFilePath()),
-        moduleSpecifier,
+        moduleSpecifier
       );
       importDeclaration.setModuleSpecifier(moduleSpecifierRelativePath);
 
@@ -107,10 +108,6 @@ project.getSourceFiles().forEach((sourceFile) => {
   }
 
   sourceFile.saveSync();
-
-  execSync(`prettier --write ${sourceFile.getFilePath()}`, {
-    stdio: 'ignore',
-  });
 });
 
 project.saveSync();

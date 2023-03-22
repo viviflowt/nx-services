@@ -1,5 +1,5 @@
 import f from 'lodash/fp';
-import { PaginationOptions } from '../interfaces';
+import { PaginationOptions } from "../interfaces";
 export const getOrder = <Entity>(
   options: Partial<PaginationOptions<Entity>> = {},
 ) => {

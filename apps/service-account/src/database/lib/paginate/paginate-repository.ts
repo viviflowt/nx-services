@@ -1,7 +1,7 @@
 import f from 'lodash/fp';
 import { FindManyOptions, Repository } from 'typeorm';
-import { PaginatedResponse } from '../dtos';
-import { PaginationOptions } from '../interfaces';
+import { PaginatedResponse } from "../dtos";
+import { PaginationOptions } from "../interfaces";
 import { OrderOptions } from '../types/order-options';
 import { parseOptions } from './parse-options';
 

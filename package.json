@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "stack",
   "version": "0.0.0",
   "license": "MIT",
@@ -6,15 +7,14 @@
     "build": "nx run-many --target=build --all --skip-nx-cache",
     "clean": "shx rm -rf dist",
     "dev": "nx serve",
-    "ext": "tools/scripts/extract.js",
-    "fix": "tools/scripts/fix.js",
+    "ext": "node scripts/extract.js",
+    "fix": "node scripts/fix.js",
     "format": "nx format:write",
     "lint": "nx run-many --target=lint --all --fix",
     "logs": "nx view-logs",
     "nx": "nx",
     "typeorm": "npx env-cmd -f .env typeorm-ts-node-commonjs -d apps/service-account/src/config/datasource.ts"
   },
-  "private": true,
   "dependencies": {
     "@aws-sdk/abort-controller": "^3.296.0",
     "@aws-sdk/client-s3": "^3.296.0",
