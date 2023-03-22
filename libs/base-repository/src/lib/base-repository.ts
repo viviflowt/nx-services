@@ -7,7 +7,7 @@ import {
   SelectQueryBuilder,
 } from 'typeorm';
 import { IsolationLevel } from 'typeorm/driver/types/IsolationLevel';
-import { PaginatedResponse } from './dtos';
+import { PaginatedResponse } from './dto';
 import { PaginationOptions } from './interfaces';
 import { paginateQueryBuilder, paginateRepository } from './utils';
 

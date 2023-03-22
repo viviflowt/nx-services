@@ -1,14 +1,14 @@
 import f from 'lodash/fp';
 import { SelectQueryBuilder } from 'typeorm';
-import { PaginatedResponse } from "../dtos";
-import { PaginationOptions } from "../interfaces";
+import { PaginatedResponse } from '../dto';
+import { PaginationOptions } from '../interfaces';
 import { parseOptions } from './parse-options';
 
 const debug = require('debug')('pagination');
 
 export const paginateQueryBuilder = async <Entity>(
   options: PaginationOptions<Entity>,
-  queryBuilder: SelectQueryBuilder<Entity>,
+  queryBuilder: SelectQueryBuilder<Entity>
 ): Promise<PaginatedResponse<Entity>> => {
   const { page, limit, order, cache } = f.memoize(parseOptions)(options);
 

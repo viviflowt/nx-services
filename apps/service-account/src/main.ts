@@ -3,8 +3,13 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import {
+  ClassSerializerInterceptor,
+  HttpStatus,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -27,6 +32,21 @@ async function bootstrap() {
       saveUninitialized: false,
     })
   );
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      validateCustomDecorators: true,
+      errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+    })
+  );
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(Reflector), {
+      excludePrefixes: ['_'],
+      enableImplicitConversion: true,
+    })
+  );
+
   app.use(morgan('dev'));
 
   const document = SwaggerModule.createDocument(
@@ -60,6 +80,9 @@ async function bootstrap() {
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   );
+
+  const swaggerUrl = `http://localhost:${port}/api-docs`;
+  Logger.log(`🚀 Swagger is running on: ${swaggerUrl}`);
 }
 
 bootstrap();

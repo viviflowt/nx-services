@@ -14,7 +14,7 @@
     "lint": "nx run-many --target=lint --all --fix",
     "logs": "nx view-logs",
     "nx": "nx",
-    "typeorm": "npx env-cmd -f .env typeorm-ts-node-commonjs -d apps/service-account/src/config/datasource.ts"
+    "typeorm": "npx env-cmd -f .env yarn typeorm-ts-node-commonjs -d apps/service-account/src/config/datasource.ts"
   },
   "dependencies": {
     "@aws-sdk/abort-controller": "^3.296.0",

@@ -2,7 +2,8 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Account } from './entities/account.entity';
+import { Account } from '../entities/account.entity';
+import { AccountRepository } from '../repositories/account.repository';
 
 @Global()
 @Module({
@@ -19,7 +20,7 @@ import { Account } from './entities/account.entity';
 
     TypeOrmModule.forFeature([Account], 'primary'),
   ],
-  providers: [],
-  exports: [],
+  providers: [AccountRepository],
+  exports: [AccountRepository],
 })
 export class DatabaseModule {}

@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import configuration from './config/configuration';
-import { DatabaseModule } from "./database";
+import { DatabaseModule } from './database';
+import { AccountModule } from './resources/accounts/account.module';
 
 @Global()
 @Module({
@@ -22,6 +23,7 @@ import { DatabaseModule } from "./database";
       global: true,
     }),
     DatabaseModule,
+    AccountModule,
   ],
   providers: [],
   exports: [],
