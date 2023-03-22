@@ -9,6 +9,23 @@ volumes:
 
 
 services:
+  service-account:
+    build:
+      context: .
+      dockerfile: ./apps/service-account/Dockerfile
+      target: development
+    environment:
+      PORT: 4000
+      PRIMARY_DB_HOST: postgres
+      PRIMARY_DB_PORT: 5432
+      PRIMARY_DB_USERNAME: postgres
+      PRIMARY_DB_PASSWORD: postgres
+      PRIMARY_DB_DATABASE: postgres
+    ports:
+      - '4000:4000'
+    depends_on:
+      - postgres
+
   postgres:
     image: bitnami/postgresql
     deploy:
@@ -25,5 +42,3 @@ services:
       - '5432:5432'
     volumes:
       - postgres:/bitnami/postgresql
-    networks:
-      - docker
