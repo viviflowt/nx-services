@@ -57,5 +57,6 @@
   "workspaceLayout": {
     "appsDir": "apps",
     "libsDir": "libs"
-  }
+  },
+  "defaultProject": "service-account"
 }
