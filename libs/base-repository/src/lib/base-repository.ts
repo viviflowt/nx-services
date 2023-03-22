@@ -7,7 +7,7 @@ import {
   SelectQueryBuilder,
 } from 'typeorm';
 import { IsolationLevel } from 'typeorm/driver/types/IsolationLevel';
-import { PaginatedResponse } from './dto';
+import { PaginatedResult } from './dto';
 import { PaginationOptions } from './interfaces';
 import { paginateQueryBuilder, paginateRepository } from './utils';
 
@@ -26,7 +26,7 @@ export abstract class BaseRepository<Entity> extends Repository<Entity> {
   async paginate<Entity>(
     options: Partial<PaginationOptions<Entity>>,
     queryBuilder: SelectQueryBuilder<Entity>
-  ): Promise<PaginatedResponse<Entity>>;
+  ): Promise<PaginatedResult<Entity>>;
   async paginate<Entity>(
     options: Partial<PaginationOptions<Entity>>,
     repository: Repository<Entity>,
@@ -34,7 +34,7 @@ export abstract class BaseRepository<Entity> extends Repository<Entity> {
       FindManyOptions<Entity>,
       'skip' | 'take' | 'order' | 'cache'
     >
-  ): Promise<PaginatedResponse<Entity>>;
+  ): Promise<PaginatedResult<Entity>>;
 
   async paginate<Entity>(
     options: Partial<PaginationOptions<Entity>>,
@@ -42,7 +42,7 @@ export abstract class BaseRepository<Entity> extends Repository<Entity> {
       FindManyOptions<Entity>,
       'skip' | 'take' | 'order' | 'cache'
     >
-  ): Promise<PaginatedResponse<Entity>>;
+  ): Promise<PaginatedResult<Entity>>;
 
   async paginate<Entity>(
     options: Partial<PaginationOptions<Entity>>,

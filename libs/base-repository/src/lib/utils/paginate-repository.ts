@@ -1,6 +1,6 @@
 import f from 'lodash/fp';
 import { FindManyOptions, Repository } from 'typeorm';
-import { PaginatedResponse } from '../dto';
+import { PaginatedResult } from '../dto';
 import { PaginationOptions } from '../interfaces';
 import { OrderOptions } from '../types/order-options';
 import { parseOptions } from './parse-options';
@@ -14,7 +14,7 @@ export async function paginateRepository<Entity>(
     FindManyOptions<Entity>,
     'skip' | 'take' | 'order' | 'cache'
   >
-): Promise<PaginatedResponse<Entity>> {
+): Promise<PaginatedResult<Entity>> {
   const { page, limit, order, cache } = f.memoize(parseOptions)(options);
 
   debug('options %o', { page, limit, order });
@@ -36,7 +36,7 @@ export async function paginateRepository<Entity>(
     cache,
   });
 
-  return new PaginatedResponse({
+  return new PaginatedResult({
     items,
     page,
     limit,

@@ -5,54 +5,54 @@ import {
 } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
-import { PaginatedQueryOptions } from '@org/base-repository';
-import { Account } from '../../database';
+import { PaginatedQueryOptions, PaginatedResult } from '@org/base-repository';
+import { Account, AccountStatus } from '../../database';
 import { AccountRepository } from '../../repositories/account.repository';
-import { Not } from 'typeorm';
+import { EntityManager, FindOneOptions, Not } from 'typeorm';
+import { Nullable } from '@org/common';
 
 @Injectable()
 export class AccountService {
   constructor(private readonly accountRepository: AccountRepository) {}
 
-  async create(createAccountDto: CreateAccountDto) {
+  async create(createAccountDto: CreateAccountDto): Promise<Account> {
     const { email } = createAccountDto;
 
     if (await this.accountRepository.findByEmail(email)) {
       throw new ConflictException('Email already associated with an account');
     }
 
-    const account = this.accountRepository.transaction(
-      async (transactionManager) => {
-        const account = this.accountRepository.create(createAccountDto);
-        return transactionManager.save(account);
-      }
-    );
-
-    return account;
+    return this.accountRepository.transaction(async (transactionManager) => {
+      const account = this.accountRepository.create(createAccountDto);
+      return transactionManager.save(account);
+    });
   }
 
-  async findAll(query: PaginatedQueryOptions<Account>) {
-    const result = await this.accountRepository.paginate(query);
+  async findAll(
+    query: PaginatedQueryOptions<Account>
+  ): Promise<PaginatedResult<Account>> {
+    return this.accountRepository.paginate(query);
+  }
 
-    return result;
+  async findOneOrThrow(options: FindOneOptions<Account>): Promise<Account> {
+    const account = await this.accountRepository.findOne(options);
+
+    if (!account) {
+      throw new NotFoundException('Account not found');
+    }
+
+    return account;
   }
 
   async findOne(id: string) {
-    const account = await this.accountRepository.findById(id);
-
-    if (!account) {
-      throw new NotFoundException('Account not found');
-    }
-
-    return account;
+    return this.findOneOrThrow({ where: { id } });
   }
 
-  async update(id: string, updateAccountDto: UpdateAccountDto) {
-    const account = await this.accountRepository.findById(id);
-
-    if (!account) {
-      throw new NotFoundException('Account not found');
-    }
+  async update(
+    id: string,
+    updateAccountDto: UpdateAccountDto
+  ): Promise<Account> {
+    const account = await this.findOneOrThrow({ where: { id } });
 
     const mergedAccount = this.accountRepository.merge(
       account,
@@ -70,21 +70,39 @@ export class AccountService {
       throw new ConflictException('Email already associated with an account');
     }
 
-    const updatedAccount = await this.accountRepository.transaction(
+    return await this.accountRepository.transaction(
       async (transactionManager) => {
         return transactionManager.save(mergedAccount);
       }
     );
-
-    return updatedAccount;
   }
 
-  async remove(id: string) {
-    const account = await this.accountRepository.findById(id);
+  async activate(id: string): Promise<void> {
+    const account = await this.findOneOrThrow({ where: { id } });
 
-    if (!account) {
-      throw new NotFoundException('Account not found');
-    }
+    await this.accountRepository.transaction(async (transactionManager) => {
+      const updatedAccount = this.accountRepository.merge(account, {
+        status: AccountStatus.Active,
+      });
+
+      return transactionManager.save(updatedAccount);
+    });
+  }
+
+  async deactivate(id: string): Promise<void> {
+    const account = await this.findOneOrThrow({ where: { id } });
+
+    await this.accountRepository.transaction(async (transactionManager) => {
+      const updatedAccount = this.accountRepository.merge(account, {
+        status: AccountStatus.Inactive,
+      });
+
+      return transactionManager.save(updatedAccount);
+    });
+  }
+
+  async remove(id: string): Promise<void> {
+    const account = await this.findOneOrThrow({ where: { id } });
 
     await this.accountRepository.transaction(async (transactionManager) => {
       return transactionManager.softRemove(account);

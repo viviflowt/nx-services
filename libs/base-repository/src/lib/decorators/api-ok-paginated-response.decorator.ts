@@ -1,18 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { applyDecorators, Type } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
-import { PaginationResult } from '../../infra/database/repositories/base.repository';
-import { PaginatedResponseValueObject } from '../mappings/paginated';
-export const ApiPaginatedOkResponse = <T extends Type<any>>(options: {
+
+import { PaginatedResult } from '../dto';
+
+export const ApiOkPaginatedResponse = <T extends Type<any>>(options: {
   type: T;
   description?: string;
 }) =>
   applyDecorators(
-    ApiExtraModels(PaginatedResponseValueObject, options.type),
+    ApiExtraModels(PaginatedResult, options.type),
     ApiOkResponse({
       description: options.description,
       schema: {
         allOf: [
-          { $ref: getSchemaPath(PaginationResult<T>) },
+          { $ref: getSchemaPath(PaginatedResult<T>) },
           {
             properties: {
               items: {
@@ -23,5 +25,5 @@ export const ApiPaginatedOkResponse = <T extends Type<any>>(options: {
           },
         ],
       },
-    }),
+    })
   );

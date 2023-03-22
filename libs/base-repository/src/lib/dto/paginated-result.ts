@@ -1,6 +1,6 @@
-import { PaginationMetadata } from "../interfaces";
+import { PaginationMetadata } from '../interfaces';
 
-export class PaginatedResponse<Entity> {
+export class PaginatedResult<Entity> {
   items: Entity[];
   meta: PaginationMetadata;
 
