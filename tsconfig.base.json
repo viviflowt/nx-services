@@ -17,6 +17,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@org/auth": ["libs/auth/src/index.ts"],
       "@org/common": ["libs/common/src/index.ts"],
       "@org/repository": ["libs/repository/src/index.ts"]
     }

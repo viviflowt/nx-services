@@ -1,16 +1,19 @@
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-
-import configuration from './config/configuration';
-import { DatabaseModule } from './database/database.module';
-import { AccountModule } from './resources/accounts/account.module';
-
+import { AuthModule, JwtAuthGuardProvider } from '@org/auth';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import helmet from 'helmet';
 import responseTime from 'response-time';
+
+import configuration from './config/configuration';
+import { AccountController } from './controllers/account.controller';
+import { RpcAccountController } from './controllers/rpc-account.controller';
+import { DatabaseModule } from './database/database.module';
+import { AccountService } from './services/account.service';
+import { RpcAccountService } from './services/rpc-account.service';
 
 @Global()
 @Module({
@@ -29,9 +32,10 @@ import responseTime from 'response-time';
       global: true,
     }),
     DatabaseModule,
-    AccountModule,
+    AuthModule,
   ],
-  providers: [],
+  controllers: [AccountController, RpcAccountController],
+  providers: [JwtAuthGuardProvider(), AccountService, RpcAccountService],
   exports: [],
 })
 export class AppModule implements NestModule {

@@ -14,6 +14,8 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import morgan from 'morgan';
 import { AppModule } from './app.module';
+import { Transport } from '@nestjs/microservices';
+import ms from 'ms';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -66,6 +68,20 @@ async function bootstrap() {
       tagsSorter: 'alpha',
     },
   });
+
+  app.connectMicroservice({
+    transport: Transport.REDIS,
+    options: {
+      host: configService.get('redis.host'),
+      port: configService.get('redis.port'),
+      db: configService.get('redis.db'),
+      retryAttempts: 5,
+      retryDelay: ms('5s'),
+      commandTimeout: ms('60s'),
+    },
+  });
+
+  await app.startAllMicroservices();
 
   const port = process.env.PORT || configService.get('port');
   await app.listen(port);

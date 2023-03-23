@@ -71,10 +71,6 @@ export class Account extends BaseEntity {
   @Column({ enum: AccountStatus, default: AccountStatus.Active })
   status: AccountStatus;
 
-  public checkPassword(password: string): boolean {
-    return bcrypt.compareSync(password, this.password);
-  }
-
   @CreateDateColumn()
   readonly createdAt: Date;
 
