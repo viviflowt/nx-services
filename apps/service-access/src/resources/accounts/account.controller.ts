@@ -9,15 +9,15 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ApiOkPaginatedResponse, PaginatedQueryOptions } from '@org/repository';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 
 import { Account } from '../../entities/account.entity';
-import { Public } from '../auth/public.decorator';
 import { Protected } from '../auth/protected.decorator';
+import { Public } from '../auth/public.decorator';
 
 @Controller('accounts')
 @ApiTags('accounts')

@@ -1,8 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Account } from '../../../entities/account.entity';
 import { Expose } from 'class-transformer';
-
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { Account } from '../../../entities/account.entity';
 
 export class Credencials {
   constructor(partial?: Partial<Credencials>) {

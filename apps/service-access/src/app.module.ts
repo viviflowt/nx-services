@@ -12,8 +12,6 @@ import session from 'express-session';
 import helmet from 'helmet';
 import responseTime from 'response-time';
 import { AuthModule } from './resources/auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './resources/auth/jwt-auth.guard';
 import { JwtAuthGuardProvider } from './resources/auth/jwt-auth-guard.provider';
 
 @Global()
