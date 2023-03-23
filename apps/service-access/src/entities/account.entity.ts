@@ -18,14 +18,11 @@ export enum AccountStatus {
   Restricted = 'restricted',
 }
 
-@Entity()
+@Entity({ synchronize: true })
 export class Account extends BaseEntity {
   constructor(partial: Partial<Account>) {
     super();
     Object.assign(this, partial);
-    // Object.freeze(this.id);
-    // Object.freeze(this.password);
-    // Object.freeze(this.createdAt);
   }
 
   @PrimaryGeneratedColumn('uuid')

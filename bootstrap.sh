@@ -21,8 +21,8 @@ docker compose up --detach --wait postgres-primary
 docker compose up --detach --wait postgres-replica
 
 # Mongo
-docker compose up --detach --wait mongo-primary
-docker compose up --detach --wait mongo-replica mongo-arbiter
+# docker compose up --detach --wait mongo-primary
+# docker compose up --detach --wait mongo-replica mongo-arbiter
 
 # Mailhog
 docker compose up --detach --wait mailhog

@@ -11,6 +11,7 @@ volumes:
   mailhog-volume:
   localstack-volume:
 
+
 services:
   redis-primary:
     image: bitnami/redis
@@ -103,71 +104,6 @@ services:
       - postgres-primary
     networks:
       - docker
-  mongo-primary:
-    image: bitnami/mongodb
-    deploy:
-      mode: global
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-    environment:
-      MONGODB_ADVERTISED_HOSTNAME: mongo-primary
-      ALLOW_EMPTY_PASSWORD: yes
-      MONGODB_ROOT_USER: root
-      MONGODB_ROOT_PASSWORD: root
-      MONGODB_REPLICA_SET_MODE: primary
-      MONGODB_REPLICA_SET_KEY: 1234567890
-    ports:
-      - '27017:27017'
-    volumes:
-      - mongo-volume:/bitnami/mongodb
-    networks:
-      - docker
-
-  mongo-secondary:
-    image: bitnami/mongodb
-    deploy:
-      mode: replicated
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-    environment:
-      MONGODB_ADVERTISED_HOSTNAME: mongo-secondary
-      MONGODB_REPLICA_SET_MODE: secondary
-      MONGODB_INITIAL_PRIMARY_HOST: mongo-primary
-      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: 27017
-      MONGODB_INITIAL_PRIMARY_ROOT_USER: root
-      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: root
-      MONGODB_REPLICA_SET_KEY: 1234567890
-    ports:
-      - '27018-27019:27017'
-    depends_on:
-      - mongo-primary
-    networks:
-      - docker
-  mongo-arbiter:
-    image: bitnami/mongodb
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-    environment:
-      MONGODB_ADVERTISED_HOSTNAME: mongo-arbiter
-      MONGODB_REPLICA_SET_MODE: arbiter
-      MONGODB_INITIAL_PRIMARY_HOST: mongo-primary
-      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: 27017
-      MONGODB_INITIAL_PRIMARY_ROOT_USER: root
-      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: root
-      MONGODB_REPLICA_SET_KEY: 1234567890
-    depends_on:
-      - mongo-primary
-    networks:
-      - docker
-
   mailhog:
     image: mailhog/mailhog
     deploy:
@@ -181,7 +117,8 @@ services:
       - 8025:8025
     volumes:
       - mailhog-volume:/var/lib/mailhog
-    network_mode: host
+    networks:
+      - docker
 
   localstack:
     image: localstack/localstack
