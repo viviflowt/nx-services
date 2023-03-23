@@ -1,11 +1,11 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { ClientProxy } from '@nestjs/microservices';
+import bcrypt from 'bcryptjs';
+import { lastValueFrom } from 'rxjs';
 import { Credencials } from './dto/credencials';
 import { LoginDto } from './dto/login.dto';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
-import bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {

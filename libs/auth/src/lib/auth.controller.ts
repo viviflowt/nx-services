@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { Request } from 'express';
 import { AuthService } from './auth.service';
+import { AuthorizationDto } from './dto/authorization.dto';
 import { LoginDto } from './dto/login.dto';
 import { Protected } from './protected.decorator';
 import { Public } from './public.decorator';
-import { AuthorizationDto } from './dto/authorization.dto';
 
 @Controller()
 @ApiTags('access')

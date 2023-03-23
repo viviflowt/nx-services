@@ -1,8 +1,8 @@
 import applicationConfig from './application';
 import awsConfig from './aws';
 import databaseConfig from './database';
-import securityConfig from './security';
 import redisConfig from './redis';
+import securityConfig from './security';
 
 const configuration = {
   port: process.env.PORT || 4001,
