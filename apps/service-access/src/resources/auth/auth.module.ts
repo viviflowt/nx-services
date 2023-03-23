@@ -16,6 +16,8 @@ import { JwtStrategy } from './jwt.strategy';
         signOptions: {
           expiresIn: configService.get('security.jwt.expiresIn'),
           issuer: configService.get('security.jwt.issuer'),
+          ignoreExpiration: false,
+          encoding: 'utf8',
         },
       }),
       inject: [ConfigService],

@@ -1,7 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-
 import { JwtService } from '@nestjs/jwt';
+
 import { AccountRepository } from '../../repositories/account.repository';
+import { Credencials } from './dto/credencials';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
@@ -26,9 +27,13 @@ export class AuthService {
 
     const authorization = this.jwtService.sign(payload);
 
-    return {
-      authorization,
-    };
+    return { authorization };
+  }
+
+  async getCredencials(payload: any): Promise<Credencials> {
+    const { sub } = payload;
+    const account = await this.accountRepository.findById(sub);
+    return new Credencials({ account });
   }
 
   async getProfile() {

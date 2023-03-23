@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { Public } from './public.decorator';
+import { Request } from 'express';
 
 @Controller()
 @ApiTags('access')
@@ -18,7 +19,9 @@ export class AuthController {
   }
 
   @Get('profile')
-  async findAll() {
+  async findAll(@Req() req: Request) {
+    console.log('headers');
+    console.log(req.headers);
     return this.authService.getProfile();
   }
 }

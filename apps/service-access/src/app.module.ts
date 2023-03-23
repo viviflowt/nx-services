@@ -12,6 +12,8 @@ import session from 'express-session';
 import helmet from 'helmet';
 import responseTime from 'response-time';
 import { AuthModule } from './resources/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './resources/auth/jwt-auth.guard';
 
 @Global()
 @Module({
@@ -33,7 +35,12 @@ import { AuthModule } from './resources/auth/auth.module';
     AccountModule,
     AuthModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
   exports: [],
 })
 export class AppModule implements NestModule {
