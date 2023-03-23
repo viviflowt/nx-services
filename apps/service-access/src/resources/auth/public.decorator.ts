@@ -1,4 +1,16 @@
-import { SetMetadata } from '@nestjs/common';
+import { SetMetadata, applyDecorators } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 export const IS_PUBLIC_KEY = 'isPublic';
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+
+export const Public = () => {
+  return applyDecorators(
+    SetMetadata(IS_PUBLIC_KEY, true),
+    ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+  );
+};

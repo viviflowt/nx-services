@@ -1,10 +1,11 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { Public } from './public.decorator';
 import { Request } from 'express';
+import { Protected } from './protected.decorator';
 
 @Controller()
 @ApiTags('access')
@@ -19,7 +20,9 @@ export class AuthController {
   }
 
   @Get('profile')
-  async findAll(@Req() req: Request) {
+  @Protected()
+  @ApiBearerAuth()
+  async getProfile(@Req() req: Request) {
     console.log('headers');
     console.log(req.headers);
     return this.authService.getProfile();

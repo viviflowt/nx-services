@@ -13,10 +13,10 @@ import { JwtStrategy } from './jwt.strategy';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get('security.jwt.secret'),
+        ignoreExpiration: false,
         signOptions: {
           expiresIn: configService.get('security.jwt.expiresIn'),
           issuer: configService.get('security.jwt.issuer'),
-          ignoreExpiration: false,
           encoding: 'utf8',
         },
       }),

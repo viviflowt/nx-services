@@ -25,11 +25,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest(err: any, credencials: any, info: any) {
-    console.log('err', err);
-    console.log('credencials', credencials);
-
-    // You can throw an exception based on either "info" or "err" arguments
+  handleRequest(err: any, credencials: any) {
     if (err || !credencials) {
       throw err || new UnauthorizedException();
     }

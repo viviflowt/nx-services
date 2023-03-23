@@ -14,6 +14,7 @@ import responseTime from 'response-time';
 import { AuthModule } from './resources/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './resources/auth/jwt-auth.guard';
+import { JwtAuthGuardProvider } from './resources/auth/jwt-auth-guard.provider';
 
 @Global()
 @Module({
@@ -35,12 +36,7 @@ import { JwtAuthGuard } from './resources/auth/jwt-auth.guard';
     AccountModule,
     AuthModule,
   ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-  ],
+  providers: [JwtAuthGuardProvider()],
   exports: [],
 })
 export class AppModule implements NestModule {
