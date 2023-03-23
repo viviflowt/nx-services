@@ -30,9 +30,5 @@ docker compose up --detach --wait mailhog
 # Localstack
 docker compose up --detach --wait localstack
 
-echo
-docker ps --all --format "{{.Names}}\t{{.Status}}"
-sleep 3
-echo
-
+# Logs
 docker compose logs --follow

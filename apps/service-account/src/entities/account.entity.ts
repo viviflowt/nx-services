@@ -23,8 +23,9 @@ export class Account extends BaseEntity {
   constructor(partial: Partial<Account>) {
     super();
     Object.assign(this, partial);
-
-    Object.freeze(this.password);
+    // Object.freeze(this.id);
+    // Object.freeze(this.password);
+    // Object.freeze(this.createdAt);
   }
 
   @PrimaryGeneratedColumn('uuid')
@@ -75,14 +76,12 @@ export class Account extends BaseEntity {
   }
 
   @CreateDateColumn()
-  // @Exclude({ toPlainOnly: true })
-  createdAt: Date;
+  readonly createdAt: Date;
 
   @UpdateDateColumn()
-  // @Exclude({ toPlainOnly: true })
-  updatedAt: Date;
+  readonly updatedAt: Date;
 
   @DeleteDateColumn()
   @Exclude({ toPlainOnly: true })
-  deletedAt?: Date;
+  readonly deletedAt?: Date;
 }

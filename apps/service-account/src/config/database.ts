@@ -54,7 +54,6 @@ export const PostgresConfig: DataSourceOptions = {
   uuidExtension: 'uuid-ossp',
   installExtensions: true,
   maxQueryExecutionTime: ms('1m'),
-  connectTimeoutMS: ms('30s'),
   replication: {
     master: {
       host: process.env.PRIMARY_DB_HOST,
