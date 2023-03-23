@@ -39,16 +39,16 @@ const run = async () => {
 
   const manager = dataSource.createEntityManager();
 
-  await createAccount(manager, {
-    firstName: 'admin',
-    lastName: 'admin',
-    email: 'admin@org.com.br',
-    password: 'password',
-  });
+  // await createAccount(manager, {
+  //   firstName: 'admin',
+  //   lastName: 'admin',
+  //   email: 'admin@org.com.br',
+  //   password: 'admin',
+  // });
 
-  // await Promise.all(
-  //   Array.from({ length: 1000 }).map(() => createAccount(manager))
-  // );
+  await Promise.all(
+    Array.from({ length: 1000 }).map(() => createAccount(manager))
+  );
 
   await dataSource.destroy();
 };

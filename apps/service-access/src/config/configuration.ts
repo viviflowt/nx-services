@@ -4,7 +4,7 @@ import databaseConfig from './database';
 import securityConfig from './security';
 
 const configuration = {
-  port: process.env.PORT || 4002,
+  port: process.env.PORT || 4001,
   application: applicationConfig(),
   security: securityConfig(),
   aws: awsConfig(),

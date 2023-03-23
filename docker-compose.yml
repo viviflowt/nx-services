@@ -12,20 +12,6 @@ volumes:
   localstack-volume:
 
 services:
-  service-account:
-    build:
-      context: .
-      dockerfile: ./apps/service-account/Dockerfile
-      # target: development
-      target: production
-    env_file:
-      - .env
-    network_mode: host
-    ports:
-      - '4000:4000'
-    networks:
-      - docker
-
   redis-primary:
     image: bitnami/redis
     deploy:
@@ -223,3 +209,16 @@ services:
       - localstack-volume:/tmp/localstack
     networks:
       - docker
+  # service-account:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/service-account/Dockerfile
+  #     # target: development
+  #     target: production
+  #   env_file:
+  #     - .env
+  #   network_mode: host
+  #   ports:
+  #     - '4000:4000'
+  #   networks:
+  #     - docker

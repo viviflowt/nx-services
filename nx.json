@@ -41,5 +41,5 @@
     "appsDir": "apps",
     "libsDir": "libs"
   },
-  "defaultProject": "service-account"
+  "defaultProject": "service-access"
 }
