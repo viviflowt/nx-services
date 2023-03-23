@@ -1,8 +1,8 @@
+import { faker } from '@faker-js/faker';
+import { randomInt } from 'crypto';
 import { EntityManager } from 'typeorm';
 import dataSource from '../config/datasource';
-import { faker } from '@faker-js/faker';
 import { Account } from '../entities/account.entity';
-import { randomInt } from 'crypto';
 
 const createAccount = async (
   manager: EntityManager,
