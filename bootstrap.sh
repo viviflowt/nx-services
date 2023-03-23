@@ -8,9 +8,7 @@ sudo docker volume rm $(sudo docker volume ls -qf dangling=true) 2>/dev/null
 sudo docker network rm $(sudo docker network ls -q) 2>/dev/null
 clear
 
-docker volume prune --force
-docker network prune --force
-docker system prune --force
+docker system prune --force --all --volumes
 clear
 
 # Pull images

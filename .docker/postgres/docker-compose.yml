@@ -4,7 +4,6 @@ volumes:
   postgres-primary-volume:
   postgres-replica-volume:
 
-
 services:
   postgres-primary:
     image: bitnami/postgresql

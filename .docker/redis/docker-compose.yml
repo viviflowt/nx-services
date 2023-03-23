@@ -4,7 +4,6 @@ volumes:
   redis-primary-volume:
   redis-replica-volume:
 
-
 services:
   redis-primary:
     image: bitnami/redis

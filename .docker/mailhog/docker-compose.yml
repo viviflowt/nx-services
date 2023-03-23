@@ -3,7 +3,6 @@ version: '3'
 volumes:
   mailhog-volume:
 
-
 services:
   mailhog:
     image: mailhog/mailhog

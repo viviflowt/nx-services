@@ -5,11 +5,9 @@ networks:
     driver: bridge
 
 volumes:
-  redis-primary-volume:
-  redis-replica-volume:
-  postgres-primary-volume:
-  postgres-replica-volume:
-  mongo-primary-volume:
+  redis-volume:
+  postgres-volume:
+  mongo-volume:
   mailhog-volume:
   localstack-volume:
 
@@ -47,7 +45,7 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - redis-primary-volume:/bitnami/redis/data
+      - redis-volume:/bitnami/redis/data
     networks:
       - docker
 
@@ -70,8 +68,6 @@ services:
       DEBUG: 1
     ports:
       - '6380-6381:6379'
-    volumes:
-      - redis-replica-volume:/bitnami/redis/data
     depends_on:
       - redis-primary
     networks:
@@ -95,7 +91,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - postgres-primary-volume:/bitnami/postgresql
+      - postgres-volume:/bitnami/postgresql
     networks:
       - docker
 
@@ -118,8 +114,6 @@ services:
       POSTGRESQL_MASTER_PORT_NUMBER: 5432
     ports:
       - '5433-5434:5432'
-    volumes:
-      - postgres-replica-volume:/bitnami/postgresql
     depends_on:
       - postgres-primary
     networks:
@@ -133,16 +127,59 @@ services:
         condition: on-failure
         delay: 5s
     environment:
+      MONGODB_ADVERTISED_HOSTNAME: mongo-primary
       ALLOW_EMPTY_PASSWORD: yes
       MONGODB_ROOT_USER: root
       MONGODB_ROOT_PASSWORD: root
-      MONGODB_USERNAME: admin
-      MONGODB_PASSWORD: admin
-      MONGO_INITDB_DATABASE: database
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_REPLICA_SET_KEY: 1234567890
     ports:
       - '27017:27017'
     volumes:
-      - mongo-primary-volume:/bitnami/mongodb
+      - mongo-volume:/bitnami/mongodb
+    networks:
+      - docker
+
+  mongo-secondary:
+    image: bitnami/mongodb
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      MONGODB_ADVERTISED_HOSTNAME: mongo-secondary
+      MONGODB_REPLICA_SET_MODE: secondary
+      MONGODB_INITIAL_PRIMARY_HOST: mongo-primary
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: 27017
+      MONGODB_INITIAL_PRIMARY_ROOT_USER: root
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: root
+      MONGODB_REPLICA_SET_KEY: 1234567890
+    ports:
+      - '27018-27019:27017'
+    depends_on:
+      - mongo-primary
+    networks:
+      - docker
+  mongo-arbiter:
+    image: bitnami/mongodb
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      MONGODB_ADVERTISED_HOSTNAME: mongo-arbiter
+      MONGODB_REPLICA_SET_MODE: arbiter
+      MONGODB_INITIAL_PRIMARY_HOST: mongo-primary
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: 27017
+      MONGODB_INITIAL_PRIMARY_ROOT_USER: root
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: root
+      MONGODB_REPLICA_SET_KEY: 1234567890
+    depends_on:
+      - mongo-primary
     networks:
       - docker
 
