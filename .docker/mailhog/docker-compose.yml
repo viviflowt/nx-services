@@ -1,0 +1,19 @@
+version: '3'
+
+volumes:
+  mailhog-volume:
+
+services:
+  mailhog:
+    image: mailhog/mailhog
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    ports:
+      - 1025:1025
+      - 8025:8025
+    volumes:
+      - mailhog-volume:/var/lib/mailhog

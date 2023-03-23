@@ -1,0 +1,50 @@
+version: '3'
+
+volumes:
+  postgres-primary-volume:
+  postgres-replica-volume:
+
+services:
+  postgres-primary:
+    image: bitnami/postgresql
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: postgres
+      POSTGRESQL_REPLICATION_MODE: master
+      POSTGRESQL_REPLICATION_USER: replica
+      POSTGRESQL_REPLICATION_PASSWORD: replica
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-primary-volume:/bitnami/postgresql
+
+  postgres-replica:
+    image: bitnami/postgresql
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: postgres
+      POSTGRESQL_REPLICATION_MODE: slave
+      POSTGRESQL_REPLICATION_USER: replica
+      POSTGRESQL_REPLICATION_PASSWORD: replica
+      POSTGRESQL_MASTER_HOST: postgres-primary
+      POSTGRESQL_MASTER_PORT_NUMBER: 5432
+    ports:
+      - '5433-5434:5432'
+    volumes:
+      - postgres-replica-volume:/bitnami/postgresql
+    depends_on:
+      - postgres-primary

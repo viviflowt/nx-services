@@ -5,6 +5,31 @@ import { registerAs } from '@nestjs/config';
 import ms from 'ms';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
+const replication = (count: number) => {
+  const port = process.env.PRIMARY_DB_REPLICA_PORT;
+
+  return {
+    replication: {
+      master: {
+        host: process.env.PRIMARY_DB_HOST,
+        port: +process.env.PRIMARY_DB_PORT,
+        username: process.env.PRIMARY_DB_USERNAME,
+        password: process.env.PRIMARY_DB_PASSWORD,
+        database: process.env.PRIMARY_DB_DATABASE,
+      },
+      slaves: [
+        ...Array.from({ length: count }).map((_, index) => ({
+          host: process.env.PRIMARY_DB_HOST,
+          port: 5451 + index,
+          username: process.env.PRIMARY_DB_USERNAME,
+          password: process.env.PRIMARY_DB_PASSWORD,
+          database: process.env.PRIMARY_DB_DATABASE,
+        })),
+      ],
+    },
+  };
+};
+
 export const PostgresConfig: DataSourceOptions = {
   type: 'postgres',
   host: process.env.PRIMARY_DB_HOST,
@@ -13,42 +38,39 @@ export const PostgresConfig: DataSourceOptions = {
   password: process.env.PRIMARY_DB_PASSWORD,
   database: process.env.PRIMARY_DB_DATABASE,
   entities: [
-    path.join(__dirname, '../database/entities/**/*.entity{.ts,.js}'),
-    path.join(__dirname, '../database/entities/**/*.view-entity{.ts,.js}'),
+    path.join(__dirname, '../entities/**/*.entity{.ts,.js}'),
+    path.join(__dirname, '../entities/**/*.view-entity{.ts,.js}'),
   ],
   logging: ['error', 'warn'],
   logger: 'advanced-console',
-  entitySkipConstructor: true,
+  // entitySkipConstructor: true,
   synchronize: true,
   dropSchema: false,
-  migrationsTableName: 'typeorm_migrations',
   namingStrategy: new SnakeNamingStrategy(),
   migrations: [path.join(__dirname, '../database/migrations/*{.ts,.js}')],
-  maxQueryExecutionTime: ms('1m'),
-};
-
-export const MsSQLConfig: DataSourceOptions = {
-  type: 'mssql',
-  host: process.env.SECUNDARY_DB_HOST,
-  port: +process.env.SECUNDARY_DB_PORT,
-  username: process.env.SECUNDARY_DB_USERNAME,
-  password: process.env.SECUNDARY_DB_PASSWORD,
-  database: process.env.SECUNDARY_DB_DATABASE,
-  entities: [
-    path.join(__dirname, '../entities/secundary/**/*.entity{.ts,.js}'),
-    path.join(__dirname, '../entities/secundary/**/*.view-entity{.ts,.js}'),
-  ],
-  logging: ['error', 'warn'],
-  logger: 'advanced-console',
-  entitySkipConstructor: true,
-  synchronize: true,
-  dropSchema: false,
+  subscribers: [path.join(__dirname, '../database/subscribers/*{.ts,.js}')],
   migrationsTableName: 'typeorm_migrations',
-  namingStrategy: new SnakeNamingStrategy(),
-  migrations: [path.join(__dirname, '../migrations/*{.ts,.js}')],
+  metadataTableName: 'typeorm_metadata',
+  uuidExtension: 'uuid-ossp',
+  installExtensions: true,
   maxQueryExecutionTime: ms('1m'),
-  extra: {
-    trustServerCertificate: true,
+  replication: {
+    master: {
+      host: process.env.PRIMARY_DB_HOST,
+      port: +process.env.PRIMARY_DB_PORT,
+      username: process.env.PRIMARY_DB_USERNAME,
+      password: process.env.PRIMARY_DB_PASSWORD,
+      database: process.env.PRIMARY_DB_DATABASE,
+    },
+    slaves: [
+      ...Array.from({ length: 2 }).map((_, index) => ({
+        host: process.env.PRIMARY_DB_HOST,
+        port: +process.env.PRIMARY_DB_PORT + index,
+        username: process.env.PRIMARY_DB_USERNAME,
+        password: process.env.PRIMARY_DB_PASSWORD,
+        database: process.env.PRIMARY_DB_DATABASE,
+      })),
+    ],
   },
 };
 

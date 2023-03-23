@@ -18,5 +18,5 @@ export default registerAs(
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
     endpoint: process.env.AWS_ENDPOINT,
-  }),
+  })
 );

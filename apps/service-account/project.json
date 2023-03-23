@@ -6,9 +6,7 @@
   "targets": {
     "build": {
       "executor": "@nrwl/webpack:webpack",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
@@ -17,11 +15,17 @@
         "main": "apps/service-account/src/main.ts",
         "tsConfig": "apps/service-account/tsconfig.app.json",
         "isolatedConfig": true,
-        "webpackConfig": "apps/service-account/webpack.config.js"
+        "webpackConfig": "apps/service-account/webpack.config.js",
+        "buildLibsFromSource": true
       },
       "configurations": {
-        "development": {},
-        "production": {}
+        "development": {
+          "sourceMap": true
+        },
+        "production": {
+          "generatePackageJson": true,
+          "optimization": true
+        }
       }
     },
     "serve": {
@@ -41,20 +45,14 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "apps/service-account/**/*.ts"
-        ]
+        "lintFilePatterns": ["apps/service-account/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/service-account/jest.config.ts",
         "passWithNoTests": true

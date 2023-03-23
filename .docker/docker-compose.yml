@@ -1,0 +1,225 @@
+version: '3'
+
+networks:
+  docker:
+    driver: bridge
+
+volumes:
+  redis-volume:
+  postgres-volume:
+  mongo-volume:
+  mailhog-volume:
+  localstack-volume:
+
+services:
+  redis-primary:
+    image: bitnami/redis
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      REDIS_USER: redis
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
+      REDIS_REPLICATION_MODE: master
+      REDIS_PASSWORD: ''
+      DEBUG: 1
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-volume:/bitnami/redis/data
+    networks:
+      - docker
+
+  redis-replica:
+    image: bitnami/redis
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      REDIS_USER: redis
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
+      REDIS_REPLICATION_MODE: slave
+      REDIS_MASTER_HOST: redis-primary
+      REDIS_MASTER_PORT_NUMBER: 6379
+      REDIS_MASTER_PASSWORD: ''
+      DEBUG: 1
+    ports:
+      - '6380-6381:6379'
+    depends_on:
+      - redis-primary
+    networks:
+      - docker
+
+  postgres-primary:
+    image: bitnami/postgresql
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: postgres
+      POSTGRESQL_REPLICATION_MODE: master
+      POSTGRESQL_REPLICATION_USER: replica
+      POSTGRESQL_REPLICATION_PASSWORD: replica
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-volume:/bitnami/postgresql
+    networks:
+      - docker
+
+  postgres-replica:
+    image: bitnami/postgresql
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: postgres
+      POSTGRESQL_REPLICATION_MODE: slave
+      POSTGRESQL_REPLICATION_USER: replica
+      POSTGRESQL_REPLICATION_PASSWORD: replica
+      POSTGRESQL_MASTER_HOST: postgres-primary
+      POSTGRESQL_MASTER_PORT_NUMBER: 5432
+    ports:
+      - '5433-5434:5432'
+    depends_on:
+      - postgres-primary
+    networks:
+      - docker
+  mongo-primary:
+    image: bitnami/mongodb
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      MONGODB_ADVERTISED_HOSTNAME: mongo-primary
+      ALLOW_EMPTY_PASSWORD: yes
+      MONGODB_ROOT_USER: root
+      MONGODB_ROOT_PASSWORD: root
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_REPLICA_SET_KEY: 1234567890
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-volume:/bitnami/mongodb
+    networks:
+      - docker
+
+  mongo-secondary:
+    image: bitnami/mongodb
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      MONGODB_ADVERTISED_HOSTNAME: mongo-secondary
+      MONGODB_REPLICA_SET_MODE: secondary
+      MONGODB_INITIAL_PRIMARY_HOST: mongo-primary
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: 27017
+      MONGODB_INITIAL_PRIMARY_ROOT_USER: root
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: root
+      MONGODB_REPLICA_SET_KEY: 1234567890
+    ports:
+      - '27018-27019:27017'
+    depends_on:
+      - mongo-primary
+    networks:
+      - docker
+  mongo-arbiter:
+    image: bitnami/mongodb
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      MONGODB_ADVERTISED_HOSTNAME: mongo-arbiter
+      MONGODB_REPLICA_SET_MODE: arbiter
+      MONGODB_INITIAL_PRIMARY_HOST: mongo-primary
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: 27017
+      MONGODB_INITIAL_PRIMARY_ROOT_USER: root
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: root
+      MONGODB_REPLICA_SET_KEY: 1234567890
+    depends_on:
+      - mongo-primary
+    networks:
+      - docker
+
+  mailhog:
+    image: mailhog/mailhog
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    ports:
+      - 1025:1025
+      - 8025:8025
+    volumes:
+      - mailhog-volume:/var/lib/mailhog
+    networks:
+      - docker
+
+  localstack:
+    image: localstack/localstack
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      # SERVICES: sqs,sns,s3,lambda,
+      AWS_DEFAULT_REGION: us-east-1
+      ALLOW_EMPTY_PASSWORD: 'yes'
+      AWS_ACCESS_KEY_ID: SERVICE_STACK
+      AWS_SECRET_ACCESS_KEY: SERVICE_STACK
+      EDGE_PORT: 4566
+      DEBUG: 1
+      LAMBDA_REMOTE_DOCKER: 0
+    ports:
+      - '4566-4597:4566-4597' # Default port forward
+      - '9200:4571' # Elasticsearch port forward
+      - '8080:8080' # WebUI port forward
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - localstack-volume:/tmp/localstack
+    networks:
+      - docker
+  # service-account:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/service-account/Dockerfile
+  #     # target: development
+  #     target: production
+  #   env_file:
+  #     - .env
+  #   network_mode: host
+  #   ports:
+  #     - '4000:4000'
+  #   networks:
+  #     - docker

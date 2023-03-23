@@ -1,9 +1,19 @@
-import { Global, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { AuthModule, JwtAuthGuardProvider } from '@org/auth';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import helmet from 'helmet';
+import responseTime from 'response-time';
 
 import configuration from './config/configuration';
-import { DatabaseModule } from './database';
+import { AccountController } from './controllers/account.controller';
+import { RpcAccountController } from './controllers/rpc-account.controller';
+import { DatabaseModule } from './database/database.module';
+import { AccountService } from './services/account.service';
+import { RpcAccountService } from './services/rpc-account.service';
 
 @Global()
 @Module({
@@ -22,8 +32,28 @@ import { DatabaseModule } from './database';
       global: true,
     }),
     DatabaseModule,
+    AuthModule,
   ],
-  providers: [],
+  controllers: [AccountController, RpcAccountController],
+  providers: [JwtAuthGuardProvider(), AccountService, RpcAccountService],
   exports: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  constructor(private readonly configService: ConfigService) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        helmet(),
+        compression(),
+        cookieParser(this.configService.get('SECRET', 'secret')),
+        session({
+          secret: this.configService.get('SECRET', 'secret'),
+          resave: false,
+          saveUninitialized: false,
+        }),
+        responseTime()
+      )
+      .forRoutes('*');
+  }
+}
