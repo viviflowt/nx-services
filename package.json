@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "stack",
+  "name": "org",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -14,6 +14,7 @@
     "logs": "nx view-logs",
     "nx": "nx",
     "serve": "nx serve",
+    "sync": "node scripts/sync.js",
     "typeorm": "npx env-cmd -f .env yarn typeorm-ts-node-commonjs -d apps/service-account/src/config/datasource.ts"
   },
   "dependencies": {

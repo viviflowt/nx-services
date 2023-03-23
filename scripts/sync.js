@@ -27,9 +27,6 @@ const run = async () => {
     process.exit(1);
   });
 
-  // hide cursor
-  process.stdout.write('\x1B[?25l');
-
   const progressBar = (count, total) => {
     const width = 60;
     const bar = Math.floor((count / total) * width);
@@ -101,8 +98,6 @@ const run = async () => {
 
   ssh.dispose();
 
-  // show cursor
-  process.stdout.write('\x1B[?25h');
   green(' done!');
   process.stdout.write(' completed!\n');
 };

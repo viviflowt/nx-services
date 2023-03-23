@@ -5,7 +5,13 @@ networks:
     driver: bridge
 
 volumes:
-  postgres:
+  redis-primary-volume:
+  redis-replica-volume:
+  postgres-primary-volume:
+  postgres-replica-volume:
+  mongo-primary-volume:
+  mailhog-volume:
+  localstack-volume:
 
 
 services:
@@ -20,3 +26,150 @@ services:
     network_mode: host
     ports:
       - '4000:4000'
+
+  redis-primary:
+    image: bitnami/redis
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      REDIS_USER: redis
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
+      REDIS_REPLICATION_MODE: master
+      REDIS_PASSWORD: ''
+      DEBUG: 1
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-primary-volume:/bitnami/redis/data
+
+  redis-replica:
+    image: bitnami/redis
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      REDIS_USER: redis
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
+      REDIS_REPLICATION_MODE: slave
+      REDIS_MASTER_HOST: redis-primary
+      REDIS_MASTER_PORT_NUMBER: 6379
+      REDIS_MASTER_PASSWORD: ''
+      DEBUG: 1
+    ports:
+      - '6380-6381:6379'
+    volumes:
+      - redis-replica-volume:/bitnami/redis/data
+    depends_on:
+      - redis-primary
+
+  postgres-primary:
+    image: bitnami/postgresql
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: postgres
+      POSTGRESQL_REPLICATION_MODE: master
+      POSTGRESQL_REPLICATION_USER: replica
+      POSTGRESQL_REPLICATION_PASSWORD: replica
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-primary-volume:/bitnami/postgresql
+
+  postgres-replica:
+    image: bitnami/postgresql
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: postgres
+      POSTGRESQL_REPLICATION_MODE: slave
+      POSTGRESQL_REPLICATION_USER: replica
+      POSTGRESQL_REPLICATION_PASSWORD: replica
+      POSTGRESQL_MASTER_HOST: postgres-primary
+      POSTGRESQL_MASTER_PORT_NUMBER: 5432
+    ports:
+      - '5433-5434:5432'
+    volumes:
+      - postgres-replica-volume:/bitnami/postgresql
+    depends_on:
+      - postgres-primary
+
+  mongo-primary:
+    image: bitnami/mongodb
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      MONGODB_ROOT_USER: root
+      MONGODB_ROOT_PASSWORD: root
+      MONGODB_USERNAME: admin
+      MONGODB_PASSWORD: admin
+      MONGO_INITDB_DATABASE: database
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-primary-volume:/bitnami/mongodb
+
+  mailhog:
+    image: mailhog/mailhog
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    ports:
+      - 1025:1025
+      - 8025:8025
+    volumes:
+      - mailhog-volume:/var/lib/mailhog
+
+  localstack:
+    image: localstack/localstack
+    deploy:
+      mode: global
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+    environment:
+      # SERVICES: sqs,sns,s3,lambda,
+      AWS_DEFAULT_REGION: us-east-1
+      ALLOW_EMPTY_PASSWORD: 'yes'
+      AWS_ACCESS_KEY_ID: SERVICE_STACK
+      AWS_SECRET_ACCESS_KEY: SERVICE_STACK
+      EDGE_PORT: 4566
+      DEBUG: 1
+      LAMBDA_REMOTE_DOCKER: 0
+    ports:
+      - '4566-4597:4566-4597' # Default port forward
+      - '9200:4571' # Elasticsearch port forward
+      - '8080:8080' # WebUI port forward
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - localstack-volume:/tmp/localstack
