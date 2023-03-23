@@ -24,16 +24,35 @@ import { JwtStrategy } from './jwt.strategy';
       }),
       inject: [ConfigService],
     }),
+    // ClientsModule.registerAsync([
+    //   {
+    //     imports: [ConfigModule],
+    //     name: 'ACCOUNT_SERVICE',
+    //     useFactory: async (configService: ConfigService) => ({
+    //       transport: Transport.REDIS,
+    //       options: {
+    //         host: configService.get('redis.host'),
+    //         port: configService.get('redis.port'),
+    //         db: configService.get('redis.db'),
+    //         retryAttempts: 5,
+    //         retryDelay: ms('5s'),
+    //         commandTimeout: ms('60s'),
+    //         connectionName: 'authorization',
+    //       },
+    //     }),
+    //     inject: [ConfigService],
+    //   },
+    // ]),
+
     ClientsModule.registerAsync([
       {
         imports: [ConfigModule],
         name: 'ACCOUNT_SERVICE',
         useFactory: async (configService: ConfigService) => ({
-          transport: Transport.REDIS,
+          transport: Transport.TCP,
           options: {
-            host: configService.get('redis.host'),
-            port: configService.get('redis.port'),
-            db: configService.get('redis.db'),
+            host: 'localhost',
+            port: 8877,
             retryAttempts: 5,
             retryDelay: ms('5s'),
             commandTimeout: ms('60s'),
