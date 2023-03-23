@@ -22,10 +22,12 @@ services:
       # target: development
       target: production
     env_file:
-      - ./apps/service-account/.env.local
+      - .env
     network_mode: host
     ports:
       - '4000:4000'
+    networks:
+      - docker
 
   redis-primary:
     image: bitnami/redis
@@ -46,6 +48,8 @@ services:
       - '6379:6379'
     volumes:
       - redis-primary-volume:/bitnami/redis/data
+    networks:
+      - docker
 
   redis-replica:
     image: bitnami/redis
@@ -70,6 +74,8 @@ services:
       - redis-replica-volume:/bitnami/redis/data
     depends_on:
       - redis-primary
+    networks:
+      - docker
 
   postgres-primary:
     image: bitnami/postgresql
@@ -90,6 +96,8 @@ services:
       - '5432:5432'
     volumes:
       - postgres-primary-volume:/bitnami/postgresql
+    networks:
+      - docker
 
   postgres-replica:
     image: bitnami/postgresql
@@ -114,7 +122,8 @@ services:
       - postgres-replica-volume:/bitnami/postgresql
     depends_on:
       - postgres-primary
-
+    networks:
+      - docker
   mongo-primary:
     image: bitnami/mongodb
     deploy:
@@ -134,6 +143,8 @@ services:
       - '27017:27017'
     volumes:
       - mongo-primary-volume:/bitnami/mongodb
+    networks:
+      - docker
 
   mailhog:
     image: mailhog/mailhog
@@ -148,6 +159,7 @@ services:
       - 8025:8025
     volumes:
       - mailhog-volume:/var/lib/mailhog
+    network_mode: host
 
   localstack:
     image: localstack/localstack
@@ -173,3 +185,5 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - localstack-volume:/tmp/localstack
+    networks:
+      - docker
